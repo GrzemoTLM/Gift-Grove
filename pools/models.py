@@ -1,5 +1,8 @@
 from bson import ObjectId
 from django.db import models
+from django_mongodb_backend.fields import ObjectIdAutoField
+
+from users.models import AppUser
 
 
 class GiftPool(models.Model):
@@ -14,3 +17,13 @@ class GiftPool(models.Model):
 
     def __str__(self):
         return self.title
+
+class Donation(models.Model):
+    id = ObjectIdAutoField(primary_key=True)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    donor = models.ForeignKey(AppUser, on_delete=models.CASCADE)
+    pool = models.ForeignKey(GiftPool, on_delete=models.CASCADE, related_name='donations')
+    donated_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.donor.email} - {self.amount} to {self.pool.title}"
