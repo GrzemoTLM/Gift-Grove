@@ -83,9 +83,11 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
-
+AUTH_USER_MODEL = 'users.AppUser'
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "USER_ID_FIELD": "username",
+    "USER_ID_CLAIM": "username",
 }
 CORS_ALLOW_ALL_ORIGINS = True
