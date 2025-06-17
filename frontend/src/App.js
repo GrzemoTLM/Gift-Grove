@@ -1,23 +1,28 @@
-import logo from './logo.svg';
+import React, { useState } from "react";
+import LoginForm from "./components/Auth/LoginForm";
+import RegisterForm from "./components/Auth/RegisterForm";
+import MainBoard from "./components/MainBoard";
 import './App.css';
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("accessToken"));
+
+  const handleLogin = (data) => {
+    setIsLoggedIn(true);
+  };
+
+  const handleRegister = (data) => {
+    // Możesz dodać automatyczne logowanie po rejestracji
+  };
+
+  if (isLoggedIn) {
+    return <MainBoard />;
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <LoginForm onLogin={handleLogin} />
+      <RegisterForm onRegister={handleRegister} />
     </div>
   );
 }
