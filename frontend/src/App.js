@@ -15,8 +15,14 @@ function App() {
     // Możesz dodać automatyczne logowanie po rejestracji
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    setIsLoggedIn(false);
+  };
+
   if (isLoggedIn) {
-    return <MainBoard />;
+    return <MainBoard onLogout={handleLogout} />;
   }
 
   return (
