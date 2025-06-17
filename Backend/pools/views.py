@@ -193,3 +193,34 @@ class ListMyInvitationsView(APIView):
 
 class ListDonationsView:
     pass
+
+
+class EditGiftPoolView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def patch(self, request, pool_id):
+        pool = get_object_or_404(GiftPool, id=pool_id)
+        payload = request.auth.payload
+        username = payload.get("username")
+        if pool.owner.username != username:
+            return Response({"error": "Only the owner can edit this pool"}, status=status.HTTP_403_FORBIDDEN)
+        serializer = GiftPoolSerializer(pool, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class DeleteGiftPoolView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, pool_id):
+        pool = get_object_or_404(GiftPool, id=pool_id)
+        payload = request.auth.payload
+        username = payload.get("username")
+        if pool.owner.username != username:
+            return Response({"error": "Only the owner can delete this pool"}, status=status.HTTP_403_FORBIDDEN)
+        pool.delete()
+        return Response({"message": "Pool deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
